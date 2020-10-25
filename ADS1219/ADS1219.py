@@ -88,3 +88,38 @@ class ADS1219:
 	VREF_EXTERNAL 				= 0x01
 
 
+	def __write_command( self, cmd ):
+		"""Wrapper to send data easly
+
+		Parameters
+		----------
+		cmd : hex
+ 		 	command to send
+
+		"""
+		self.bus.write_byte( self.i2c_adr, cmd )
+
+
+
+	def __read_registers( self, reg, size ):
+		"""Wrapper to read data easly
+		Parameters
+		----------
+		reg : hex
+ 		 	register to write
+		
+		size : int
+			size of data
+
+		Returns
+		-------
+		list
+			Data read
+
+		"""
+		write = i2c_msg.write( self.i2c_adr, [reg] )
+		read  = i2c_msg.read( self.i2c_adr, size )
+		self.bus.i2c_rdwr( write, read )
+		return list( read )
+
+
