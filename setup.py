@@ -8,27 +8,27 @@ import ADS1219
 
 setup(
  
-    name='ADS1219-Python',
+	name='ADS1219-Python',
  
-    # la version du code
-    version=ADS1219.__version__,
-    packages=find_packages(),
-    author="Mickaël Veleine",
-    author_email="contact@mickaelv.fr",
-    description="Lib to use ADS1219 with Python on Raspberry",
-    long_description=open('README.md').read(),
-    install_requires= ["RPi.GPIO", "time", "smbus2"],
-    include_package_data=True,
-    url='https://github.com/mickaelv/ADS1219-Python',
-    classifiers=[
-        "Programming Language :: Python",
-        "Development Status :: 2 - Pre-Alpha",
-        "License :: OSI Approved :: MIT License",
-        "Natural Language :: English",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Topic :: System :: Hardware :: Hardware Drivers",
-    ],
+	# la version du code
+	version=ADS1219.__version__,
+	packages=find_packages(),
+	author="Mickaël Veleine",
+	author_email="contact@mickaelv.fr",
+	description="Lib to use ADS1219 with Python on Raspberry",
+	long_description=open('README.md').read(),
+	install_requires= ["RPi.GPIO", "time", "smbus2"],
+	include_package_data=True,
+	url='https://github.com/mickaelv/ADS1219-Python',
+	classifiers=[
+		"Programming Language :: Python",
+		"Development Status :: 2 - Pre-Alpha",
+		"License :: OSI Approved :: MIT License",
+		"Natural Language :: English",
+		"Operating System :: OS Independent",
+		"Programming Language :: Python",
+		"Topic :: System :: Hardware :: Hardware Drivers",
+	],
  
- 
+	 
 )

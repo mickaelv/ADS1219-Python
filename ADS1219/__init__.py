@@ -65,5 +65,5 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 			
 """
- from ADS1219 import *
+from ADS1219 import *
 __version__ = "0.0.1"
