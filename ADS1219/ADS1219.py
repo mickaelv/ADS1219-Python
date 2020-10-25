@@ -9,7 +9,9 @@
 	------------------------
  
 	Import the library with import ADS129
+	
 	Create a new object with : ADS1219 = new ADS1219(1, 0x40, 3)
+
 	Have fun !
 
 	.. note:: Want more exemple ? See examples folder

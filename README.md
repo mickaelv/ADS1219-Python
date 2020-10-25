@@ -4,23 +4,11 @@ ADS1219-Python - Python Library to use easly ADS1219 with a raspberry
 
 Simple Python Library to use easly ADS1219 with a raspberry. 
 
-Check the doc here : https://github.com/mickaelv/ADS1219-Python/doc/
+Check the doc here : https://mickaelv.github.io/ADS1219-Python/
 
 Based on the code of @OM2220 https://github.com/OM222O/ADS1219
 
 Version : 0.0.1
 
 
-
-You can install it with
-
-    pip install ADS1219-Python
-
-Or just download the file
-
-
-
-    >>> 
-    >>> 
-
-This code is under MIT licence.
+This code is under MIT licence with the support of INREA ( Unité REVERSAAL at Villeurbanne )
