@@ -6,7 +6,11 @@ Simple Python Library to use easly ADS1219 with a raspberry.
 
 Check the doc here : https://github.com/mickaelv/ADS1219-Python/doc/
 
+Based on the code of @OM2220 https://github.com/OM222O/ADS1219
+
 Version : 0.0.1
+
+
 
 You can install it with
 
