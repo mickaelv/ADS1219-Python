@@ -10,7 +10,7 @@ Based on the code of @OM2220 https://github.com/OM222O/ADS1219
 
 Version : 0.0.1
 
-##titre How To Install
+How To Install :
 
 
      git clone https://github.com/mickaelv/ADS1219-Python && python3 setup.py install
