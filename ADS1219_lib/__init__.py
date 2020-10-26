@@ -2,7 +2,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-	The ``ADS1219`` package
+	The ``ADS1219_lib`` package
 	======================
  
 	Use it to use ADS1219 with à raspberry Pi. 
@@ -29,7 +29,7 @@
 	------------------------
  
 	Import the library with import ADS129
-	Create a new object with : ADS1219 = new ADS1219(1, 0x40, 3)
+	Create a new object with : ADS1219 = new ADS1219(1, 0x40, 4)
 	Have fun !
 
 	.. note:: Want more exemple ? See examples folder
@@ -65,5 +65,5 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 			
 """
-from ADS1219 import *
 __version__ = "0.0.1"
+from .core import ADS1219
