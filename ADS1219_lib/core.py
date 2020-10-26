@@ -52,7 +52,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 from smbus2 import SMBus, i2c_msg
 
-class ads.
+class ADS1219:
 
 	COMMAND_RESET 				= 0x06
 	COMMAND_START_SYNC 			= 0x08
@@ -132,6 +132,9 @@ class ads.
 	def resetConfig( self ):
 		"""Reset Chip"""
 		self.config = 0x00
+		self.gain = 1
+		self.datarate = 20
+		self.Vref = 2.048
 		self.__write_command( self.COMMAND_RESET )
 
 	def poweroff( self ):
@@ -158,8 +161,12 @@ class ads.
 
 		"""
 		self.config &= self.GAIN_MASK
-		if ( gain == 4) : self.config |= GAIN_4
-		elif( gain == 1) : self.config |= GAIN_1
+		if ( gain == 4) : 
+			self.config |= GAIN_4
+			self.gain =  4
+		elif( gain == 1) : 
+			self.config |= GAIN_1
+			self.gain =  1
 		else : raise ValueError("'gain' can only be either 1 or 4")
 		self.__sendConfig()
 
@@ -182,10 +189,18 @@ class ads.
 		"""
 
 		self.config &= self.DATA_RATE_MASK
-		if( datarate == 20 ) : self.config |= DATA_RATE_20
-		elif( datarate == 90 ) : self.config |= DATA_RATE_90
-		elif( datarate == 330 ) : self.config |= DATA_RATE_330
-		elif( datarate == 1000 ) : self.config |= DATA_RATE_1000
+		if( datarate == 20 ) : 
+			self.config |= DATA_RATE_20
+			self.datarate = 20
+		elif( datarate == 90 ) : 
+			self.config |= DATA_RATE_90
+			self.datarate = 90
+		elif( datarate == 330 ) : 
+			self.config |= DATA_RATE_330
+			self.datarate = 330
+		elif( datarate == 1000 ) : 
+			self.config |= DATA_RATE_1000
+			self.datarate = 1000
 		else : raise ValueError("'datarate' can only be either 20, 90, 330 or 1000")
 		self.__sendConfig()
 
@@ -202,14 +217,24 @@ class ads.
 		self.config |= self.MODE_CONTINUOUS
 		self.__sendConfig()
 
-	def setExternalReference( self ):
-		"""Configure the chip with an external reference """
+	def setExternalReference( self , value):
+		"""Configure the chip with an external reference 
+
+		Parameters
+		----------
+		value : float
+ 		 	value of the external reference
+
+ 		"""
+
+		self.Vref = value
 		self.config &= self.VREF_MASK
 		self.config |= self.VREF_EXTERNAL
 		self.__sendConfig()
 
 	def setInternalReference( self ):
 		"""Configure the chip with the internal reference """
+		self.Vref = 2.048
 		self.config &= self.VREF_MASK
 		self.config |= self.VREF_INTERNAL
 		self.__sendConfig()
@@ -228,6 +253,7 @@ class ads.
 			ads.readSingleEnded(0)
 
 		"""
+
 		self.config &= self.MUX_MASK
 		if( channel == 0 ) : self.config |= self.MUX_SINGLE_0
 		elif( channel == 1 ) : self.config |= self.MUX_SINGLE_1
@@ -299,12 +325,27 @@ class ads.
 		.. note:: Please refer to 8.3.7 in the datasheet ( https://www.ti.com/lit/ds/sbas924a/sbas924a.pdf )
 
 		"""
+
 		self.config &= self.MUX_MASK
 		self.config |= self.MUX_SHORTED
 		self.__sendConfig()
 		self.start()
 		self.waitResult()
 		return self.readConversionResult()
+
+	def convertToV(self, value):
+		"""Function to convert the value in Volt using Gain and Vref. 
+		Parameters
+		----------
+		value : float
+			Value to convert
+
+		Returns
+		---------
+		float 
+			Value in V.
+		"""
+		return  ( self.Vref / self.gain ) * ( value / pow(2,23) ) 
 
 	def __init__( self, port=1, address=0x40, readyPin=0 ):
 		"""
@@ -322,10 +363,14 @@ class ads.
 			ads = ADS1219(1, 0x40, 4)
 
 		"""
+
 		self.i2c_adr = address
 		self.bus = SMBus( port, True )
 		self.readyPin = readyPin
 		self.config = 0x00
+		self.gain = 1
+		self.datarate = 20
+		self.Vref = 2.048
 		if( readyPin>0 ):
 			GPIO.setmode( GPIO.BCM )
 			GPIO.setup(readyPin, GPIO.IN )
