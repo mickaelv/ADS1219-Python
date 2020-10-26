@@ -26,12 +26,8 @@
 <h1 id="the-core-module">The <code>core</code> module</h1>
 <h2 id="how-to-use">How to use ?</h2>
 <p>Import the library with import ADS129</p>
-<p>Create a new object with : ads =
-ADS1219(1, 0x40, 4)</p>
+<p>Create a new object with : ads = ADS1219(1, 0x40, 4)</p>
 <p>Have fun !</p>
-<div class="admonition note">
-<p class="admonition-title">Note:&ensp;Want more exemple ? See examples folder</p>
-</div>
 <h2 id="licence">Licence</h2>
 <h2 id="mit-license">Mit License</h2>
 <p>Copyright (c) 2020 Mickaël Veleine ( <a href="https://mickaelv.fr">https://mickaelv.fr</a> ) with
@@ -60,23 +56,21 @@ OTHER DEALINGS IN THE SOFTWARE.</p>
 </summary>
 <pre><code class="python">#!/usr/bin/env python
 # -*- coding: utf-8 -*-
- 
+
 &#34;&#34;&#34;
         The ``core`` module
         ======================
- 
+
         How to use ?
         ------------------------
- 
+
         Import the library with import ADS129
-        
-        Create a new object with : ads =  ADS1219(1, 0x40, 4)
+
+        Create a new object with : ads = ADS1219(1, 0x40, 4)
 
         Have fun !
 
-        .. note:: Want more exemple ? See examples folder
- 
-        Licence 
+        Licence
         ------------------------
 
         MIT License
@@ -105,7 +99,7 @@ OTHER DEALINGS IN THE SOFTWARE.</p>
         WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
         FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
         OTHER DEALINGS IN THE SOFTWARE.
-                        
+
 &#34;&#34;&#34;
 
 import RPi.GPIO as GPIO
@@ -169,7 +163,7 @@ class ADS1219:
                 ----------
                 reg : hex
                         register to write
-                
+
                 size : int
                         size of data
 
@@ -192,6 +186,9 @@ class ADS1219:
         def resetConfig( self ):
                 &#34;&#34;&#34;Reset Chip&#34;&#34;&#34;
                 self.config = 0x00
+                self.gain = 1
+                self.datarate = 20
+                self.Vref = 2.048
                 self.__write_command( self.COMMAND_RESET )
 
         def poweroff( self ):
@@ -210,19 +207,23 @@ class ADS1219:
                 Parameters
                 ----------
                 gain : int
-                        value of the gain:  1 or 4
+                        value of the gain:  1 or 4 (default: 1)
 
                 :Example:
 
-                        ADS1219.setGain(4) 
+                        ads.setGain(4)
 
                 &#34;&#34;&#34;
                 self.config &amp;= self.GAIN_MASK
-                if ( gain == 4) : self.config |= GAIN_4
-                elif( gain == 1) : self.config |= GAIN_1
+                if ( gain == 4) : 
+                        self.config |= self.GAIN_4
+                        self.gain =  4
+                elif( gain == 1) : 
+                        self.config |= self.GAIN_1
+                        self.gain =  1
                 else : raise ValueError(&#34;&#39;gain&#39; can only be either 1 or 4&#34;)
                 self.__sendConfig()
-                
+
         def setDataRate( self, datarate ):
                 &#34;&#34;&#34;
                 Define the datarate
@@ -230,22 +231,30 @@ class ADS1219:
                 Parameters
                 ----------
                 datarate : int
-                        value of the datarate:  20, 90, 330 or 1000
-                
+                        value of the datarate:  20, 90, 330 or 1000 (default: 20)
+
                 size : int
                         size of data
 
                 :Example:
 
-                        ADS1219.setDataRate(1000) 
+                        ads.setDataRate(1000)
 
                 &#34;&#34;&#34;
 
                 self.config &amp;= self.DATA_RATE_MASK
-                if( datarate == 20 ) : self.config |= DATA_RATE_20
-                elif( datarate == 90 ) : self.config |= DATA_RATE_90
-                elif( datarate == 330 ) : self.config |= DATA_RATE_330
-                elif( datarate == 1000 ) : self.config |= DATA_RATE_1000
+                if( datarate == 20 ) : 
+                        self.config |= self.DATA_RATE_20
+                        self.datarate = 20
+                elif( datarate == 90 ) : 
+                        self.config |= self.DATA_RATE_90
+                        self.datarate = 90
+                elif( datarate == 330 ) : 
+                        self.config |= self.DATA_RATE_330
+                        self.datarate = 330
+                elif( datarate == 1000 ) : 
+                        self.config |= self.DATA_RATE_1000
+                        self.datarate = 1000
                 else : raise ValueError(&#34;&#39;datarate&#39; can only be either 20, 90, 330 or 1000&#34;)
                 self.__sendConfig()
 
@@ -262,14 +271,24 @@ class ADS1219:
                 self.config |= self.MODE_CONTINUOUS
                 self.__sendConfig()
 
-        def setExternalReference( self ):
-                &#34;&#34;&#34;Configure the chip with an external reference &#34;&#34;&#34;
+        def setExternalReference( self , value):
+                &#34;&#34;&#34;Configure the chip with an external reference 
+
+                Parameters
+                ----------
+                value : float
+                        value of the external reference
+
+                &#34;&#34;&#34;
+
+                self.Vref = value
                 self.config &amp;= self.VREF_MASK
                 self.config |= self.VREF_EXTERNAL
                 self.__sendConfig()
 
         def setInternalReference( self ):
                 &#34;&#34;&#34;Configure the chip with the internal reference &#34;&#34;&#34;
+                self.Vref = 2.048
                 self.config &amp;= self.VREF_MASK
                 self.config |= self.VREF_INTERNAL
                 self.__sendConfig()
@@ -285,9 +304,10 @@ class ADS1219:
 
                 :Example:
 
-                        ADS1219.readSingleEnded(0)
+                        ads.readSingleEnded(0)
 
-                &#34;&#34;&#34;     
+                &#34;&#34;&#34;
+
                 self.config &amp;= self.MUX_MASK
                 if( channel == 0 ) : self.config |= self.MUX_SINGLE_0
                 elif( channel == 1 ) : self.config |= self.MUX_SINGLE_1
@@ -343,7 +363,7 @@ class ADS1219:
                 return self.readConversionResult()
 
         def readDifferential_2_3( self ):
-                &#34;&#34;&#34;Read a value between 2 and 3 channel&#34;&#34;&#34;      
+                &#34;&#34;&#34;Read a value between 2 and 3 channel&#34;&#34;&#34;
                 self.config &amp;= self.MUX_MASK
                 self.config |= self.MUX_DIF_2_3
                 self.__sendConfig()
@@ -358,7 +378,8 @@ class ADS1219:
 
                 .. note:: Please refer to 8.3.7 in the datasheet ( https://www.ti.com/lit/ds/sbas924a/sbas924a.pdf )
 
-                &#34;&#34;&#34;     
+                &#34;&#34;&#34;
+
                 self.config &amp;= self.MUX_MASK
                 self.config |= self.MUX_SHORTED
                 self.__sendConfig()
@@ -366,26 +387,44 @@ class ADS1219:
                 self.waitResult()
                 return self.readConversionResult()
 
+        def convertToV(self, value):
+                &#34;&#34;&#34;Function to convert the value in Volt using Gain and Vref. 
+                Parameters
+                ----------
+                value : float
+                        Value to convert
+
+                Returns
+                ---------
+                float 
+                        Value in V.
+                &#34;&#34;&#34;
+                return  ( self.Vref / self.gain ) * ( value / pow(2,23) ) 
+
         def __init__( self, port=1, address=0x40, readyPin=0 ):
                 &#34;&#34;&#34;
-                Constructor 
+                Constructor
                 Parameters
                 ----------
                 port : int
                         I2C port, for raspberry with port 2 and 3 please set to port=1
-                address : hex           
+                address : hex
                         I2C adress of the chip. Default is 0x40
                 readyPin: int
                         Input pin of the raspberry to know if data is available. 0 to desactivate and use software information
                 :Example:
 
-                        ADS1219 = new ADS1219(1, 0x40, 4)
+                        ads = ADS1219(1, 0x40, 4)
 
                 &#34;&#34;&#34;
-                self.i2c_adr = address 
+
+                self.i2c_adr = address
                 self.bus = SMBus( port, True )
                 self.readyPin = readyPin
                 self.config = 0x00
+                self.gain = 1
+                self.datarate = 20
+                self.Vref = 2.048
                 if( readyPin&gt;0 ):
                         GPIO.setmode( GPIO.BCM )
                         GPIO.setup(readyPin, GPIO.IN )
@@ -393,7 +432,7 @@ class ADS1219:
         def __enter__( self ):
                 &#34;&#34;&#34;Enter function&#34;&#34;&#34;
                 return self
-                
+
         def __del__( self ):
                 &#34;&#34;&#34;Delete function&#34;&#34;&#34;
                 self.bus.close()
@@ -423,14 +462,13 @@ Parameters</p>
 <dl>
 <dt><strong><code>port</code></strong> :&ensp;<code>int</code></dt>
 <dd>I2C port, for raspberry with port 2 and 3 please set to port=1</dd>
-<dt><strong><code>address</code></strong> :&ensp;<code>hex
-</code></dt>
+<dt><strong><code>address</code></strong> :&ensp;<code>hex</code></dt>
 <dd>I2C adress of the chip. Default is 0x40</dd>
 <dt><strong><code>readyPin</code></strong> :&ensp;<code>int</code></dt>
 <dd>Input pin of the raspberry to know if data is available. 0 to desactivate and use software information</dd>
 </dl>
 <p>:Example:</p>
-<pre><code>    ADS1219 = new ADS1219(1, 0x40, 4)
+<pre><code>    ads = ADS1219(1, 0x40, 4)
 </code></pre></div>
 <details class="source">
 <summary>
@@ -493,7 +531,7 @@ Parameters</p>
                 ----------
                 reg : hex
                         register to write
-                
+
                 size : int
                         size of data
 
@@ -516,6 +554,9 @@ Parameters</p>
         def resetConfig( self ):
                 &#34;&#34;&#34;Reset Chip&#34;&#34;&#34;
                 self.config = 0x00
+                self.gain = 1
+                self.datarate = 20
+                self.Vref = 2.048
                 self.__write_command( self.COMMAND_RESET )
 
         def poweroff( self ):
@@ -534,19 +575,23 @@ Parameters</p>
                 Parameters
                 ----------
                 gain : int
-                        value of the gain:  1 or 4
+                        value of the gain:  1 or 4 (default: 1)
 
                 :Example:
 
-                        ADS1219.setGain(4) 
+                        ads.setGain(4)
 
                 &#34;&#34;&#34;
                 self.config &amp;= self.GAIN_MASK
-                if ( gain == 4) : self.config |= GAIN_4
-                elif( gain == 1) : self.config |= GAIN_1
+                if ( gain == 4) : 
+                        self.config |= self.GAIN_4
+                        self.gain =  4
+                elif( gain == 1) : 
+                        self.config |= self.GAIN_1
+                        self.gain =  1
                 else : raise ValueError(&#34;&#39;gain&#39; can only be either 1 or 4&#34;)
                 self.__sendConfig()
-                
+
         def setDataRate( self, datarate ):
                 &#34;&#34;&#34;
                 Define the datarate
@@ -554,22 +599,30 @@ Parameters</p>
                 Parameters
                 ----------
                 datarate : int
-                        value of the datarate:  20, 90, 330 or 1000
-                
+                        value of the datarate:  20, 90, 330 or 1000 (default: 20)
+
                 size : int
                         size of data
 
                 :Example:
 
-                        ADS1219.setDataRate(1000) 
+                        ads.setDataRate(1000)
 
                 &#34;&#34;&#34;
 
                 self.config &amp;= self.DATA_RATE_MASK
-                if( datarate == 20 ) : self.config |= DATA_RATE_20
-                elif( datarate == 90 ) : self.config |= DATA_RATE_90
-                elif( datarate == 330 ) : self.config |= DATA_RATE_330
-                elif( datarate == 1000 ) : self.config |= DATA_RATE_1000
+                if( datarate == 20 ) : 
+                        self.config |= self.DATA_RATE_20
+                        self.datarate = 20
+                elif( datarate == 90 ) : 
+                        self.config |= self.DATA_RATE_90
+                        self.datarate = 90
+                elif( datarate == 330 ) : 
+                        self.config |= self.DATA_RATE_330
+                        self.datarate = 330
+                elif( datarate == 1000 ) : 
+                        self.config |= self.DATA_RATE_1000
+                        self.datarate = 1000
                 else : raise ValueError(&#34;&#39;datarate&#39; can only be either 20, 90, 330 or 1000&#34;)
                 self.__sendConfig()
 
@@ -586,14 +639,24 @@ Parameters</p>
                 self.config |= self.MODE_CONTINUOUS
                 self.__sendConfig()
 
-        def setExternalReference( self ):
-                &#34;&#34;&#34;Configure the chip with an external reference &#34;&#34;&#34;
+        def setExternalReference( self , value):
+                &#34;&#34;&#34;Configure the chip with an external reference 
+
+                Parameters
+                ----------
+                value : float
+                        value of the external reference
+
+                &#34;&#34;&#34;
+
+                self.Vref = value
                 self.config &amp;= self.VREF_MASK
                 self.config |= self.VREF_EXTERNAL
                 self.__sendConfig()
 
         def setInternalReference( self ):
                 &#34;&#34;&#34;Configure the chip with the internal reference &#34;&#34;&#34;
+                self.Vref = 2.048
                 self.config &amp;= self.VREF_MASK
                 self.config |= self.VREF_INTERNAL
                 self.__sendConfig()
@@ -609,9 +672,10 @@ Parameters</p>
 
                 :Example:
 
-                        ADS1219.readSingleEnded(0)
+                        ads.readSingleEnded(0)
 
-                &#34;&#34;&#34;     
+                &#34;&#34;&#34;
+
                 self.config &amp;= self.MUX_MASK
                 if( channel == 0 ) : self.config |= self.MUX_SINGLE_0
                 elif( channel == 1 ) : self.config |= self.MUX_SINGLE_1
@@ -667,7 +731,7 @@ Parameters</p>
                 return self.readConversionResult()
 
         def readDifferential_2_3( self ):
-                &#34;&#34;&#34;Read a value between 2 and 3 channel&#34;&#34;&#34;      
+                &#34;&#34;&#34;Read a value between 2 and 3 channel&#34;&#34;&#34;
                 self.config &amp;= self.MUX_MASK
                 self.config |= self.MUX_DIF_2_3
                 self.__sendConfig()
@@ -682,7 +746,8 @@ Parameters</p>
 
                 .. note:: Please refer to 8.3.7 in the datasheet ( https://www.ti.com/lit/ds/sbas924a/sbas924a.pdf )
 
-                &#34;&#34;&#34;     
+                &#34;&#34;&#34;
+
                 self.config &amp;= self.MUX_MASK
                 self.config |= self.MUX_SHORTED
                 self.__sendConfig()
@@ -690,26 +755,44 @@ Parameters</p>
                 self.waitResult()
                 return self.readConversionResult()
 
+        def convertToV(self, value):
+                &#34;&#34;&#34;Function to convert the value in Volt using Gain and Vref. 
+                Parameters
+                ----------
+                value : float
+                        Value to convert
+
+                Returns
+                ---------
+                float 
+                        Value in V.
+                &#34;&#34;&#34;
+                return  ( self.Vref / self.gain ) * ( value / pow(2,23) ) 
+
         def __init__( self, port=1, address=0x40, readyPin=0 ):
                 &#34;&#34;&#34;
-                Constructor 
+                Constructor
                 Parameters
                 ----------
                 port : int
                         I2C port, for raspberry with port 2 and 3 please set to port=1
-                address : hex           
+                address : hex
                         I2C adress of the chip. Default is 0x40
                 readyPin: int
                         Input pin of the raspberry to know if data is available. 0 to desactivate and use software information
                 :Example:
 
-                        ADS1219 = new ADS1219(1, 0x40, 4)
+                        ads = ADS1219(1, 0x40, 4)
 
                 &#34;&#34;&#34;
-                self.i2c_adr = address 
+
+                self.i2c_adr = address
                 self.bus = SMBus( port, True )
                 self.readyPin = readyPin
                 self.config = 0x00
+                self.gain = 1
+                self.datarate = 20
+                self.Vref = 2.048
                 if( readyPin&gt;0 ):
                         GPIO.setmode( GPIO.BCM )
                         GPIO.setup(readyPin, GPIO.IN )
@@ -717,7 +800,7 @@ Parameters</p>
         def __enter__( self ):
                 &#34;&#34;&#34;Enter function&#34;&#34;&#34;
                 return self
-                
+
         def __del__( self ):
                 &#34;&#34;&#34;Delete function&#34;&#34;&#34;
                 self.bus.close()
@@ -847,6 +930,41 @@ Parameters</p>
 </dl>
 <h3>Methods</h3>
 <dl>
+<dt id="ADS1219_lib.core.ADS1219.convertToV"><code class="name flex">
+<span>def <span class="ident">convertToV</span></span>(<span>self, value)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Function to convert the value in Volt using Gain and Vref.
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>value</code></strong> :&ensp;<code>float</code></dt>
+<dd>Value to convert</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float </code></dt>
+<dd>Value in V.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def convertToV(self, value):
+        &#34;&#34;&#34;Function to convert the value in Volt using Gain and Vref. 
+        Parameters
+        ----------
+        value : float
+                Value to convert
+
+        Returns
+        ---------
+        float 
+                Value in V.
+        &#34;&#34;&#34;
+        return  ( self.Vref / self.gain ) * ( value / pow(2,23) ) </code></pre>
+</details>
+</dd>
 <dt id="ADS1219_lib.core.ADS1219.isReady"><code class="name flex">
 <span>def <span class="ident">isReady</span></span>(<span>self)</span>
 </code></dt>
@@ -942,7 +1060,7 @@ Parameters</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def readDifferential_2_3( self ):
-        &#34;&#34;&#34;Read a value between 2 and 3 channel&#34;&#34;&#34;      
+        &#34;&#34;&#34;Read a value between 2 and 3 channel&#34;&#34;&#34;
         self.config &amp;= self.MUX_MASK
         self.config |= self.MUX_DIF_2_3
         self.__sendConfig()
@@ -969,7 +1087,8 @@ Parameters</p>
 
         .. note:: Please refer to 8.3.7 in the datasheet ( https://www.ti.com/lit/ds/sbas924a/sbas924a.pdf )
 
-        &#34;&#34;&#34;     
+        &#34;&#34;&#34;
+
         self.config &amp;= self.MUX_MASK
         self.config |= self.MUX_SHORTED
         self.__sendConfig()
@@ -990,7 +1109,7 @@ Parameters</p>
 0 to 3</dd>
 </dl>
 <p>:Example:</p>
-<pre><code>    ADS1219.readSingleEnded(0)
+<pre><code>    ads.readSingleEnded(0)
 </code></pre></div>
 <details class="source">
 <summary>
@@ -1007,9 +1126,10 @@ Parameters</p>
 
         :Example:
 
-                ADS1219.readSingleEnded(0)
+                ads.readSingleEnded(0)
 
-        &#34;&#34;&#34;     
+        &#34;&#34;&#34;
+
         self.config &amp;= self.MUX_MASK
         if( channel == 0 ) : self.config |= self.MUX_SINGLE_0
         elif( channel == 1 ) : self.config |= self.MUX_SINGLE_1
@@ -1034,6 +1154,9 @@ Parameters</p>
 <pre><code class="python">def resetConfig( self ):
         &#34;&#34;&#34;Reset Chip&#34;&#34;&#34;
         self.config = 0x00
+        self.gain = 1
+        self.datarate = 20
+        self.Vref = 2.048
         self.__write_command( self.COMMAND_RESET )</code></pre>
 </details>
 </dd>
@@ -1062,12 +1185,12 @@ Parameters</p>
 <dl>
 <dt><strong><code>datarate</code></strong> :&ensp;<code>int</code></dt>
 <dd>value of the datarate:
-20, 90, 330 or 1000</dd>
+20, 90, 330 or 1000 (default: 20)</dd>
 <dt><strong><code>size</code></strong> :&ensp;<code>int</code></dt>
 <dd>size of data</dd>
 </dl>
 <p>:Example:</p>
-<pre><code>    ADS1219.setDataRate(1000)
+<pre><code>    ads.setDataRate(1000)
 </code></pre></div>
 <details class="source">
 <summary>
@@ -1080,37 +1203,59 @@ Parameters</p>
         Parameters
         ----------
         datarate : int
-                value of the datarate:  20, 90, 330 or 1000
-        
+                value of the datarate:  20, 90, 330 or 1000 (default: 20)
+
         size : int
                 size of data
 
         :Example:
 
-                ADS1219.setDataRate(1000) 
+                ads.setDataRate(1000)
 
         &#34;&#34;&#34;
 
         self.config &amp;= self.DATA_RATE_MASK
-        if( datarate == 20 ) : self.config |= DATA_RATE_20
-        elif( datarate == 90 ) : self.config |= DATA_RATE_90
-        elif( datarate == 330 ) : self.config |= DATA_RATE_330
-        elif( datarate == 1000 ) : self.config |= DATA_RATE_1000
+        if( datarate == 20 ) : 
+                self.config |= self.DATA_RATE_20
+                self.datarate = 20
+        elif( datarate == 90 ) : 
+                self.config |= self.DATA_RATE_90
+                self.datarate = 90
+        elif( datarate == 330 ) : 
+                self.config |= self.DATA_RATE_330
+                self.datarate = 330
+        elif( datarate == 1000 ) : 
+                self.config |= self.DATA_RATE_1000
+                self.datarate = 1000
         else : raise ValueError(&#34;&#39;datarate&#39; can only be either 20, 90, 330 or 1000&#34;)
         self.__sendConfig()</code></pre>
 </details>
 </dd>
 <dt id="ADS1219_lib.core.ADS1219.setExternalReference"><code class="name flex">
-<span>def <span class="ident">setExternalReference</span></span>(<span>self)</span>
+<span>def <span class="ident">setExternalReference</span></span>(<span>self, value)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Configure the chip with an external reference</p></div>
+<div class="desc"><p>Configure the chip with an external reference </p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>value</code></strong> :&ensp;<code>float</code></dt>
+<dd>value of the external reference</dd>
+</dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def setExternalReference( self ):
-        &#34;&#34;&#34;Configure the chip with an external reference &#34;&#34;&#34;
+<pre><code class="python">def setExternalReference( self , value):
+        &#34;&#34;&#34;Configure the chip with an external reference 
+
+        Parameters
+        ----------
+        value : float
+                value of the external reference
+
+        &#34;&#34;&#34;
+
+        self.Vref = value
         self.config &amp;= self.VREF_MASK
         self.config |= self.VREF_EXTERNAL
         self.__sendConfig()</code></pre>
@@ -1125,10 +1270,10 @@ Parameters</p>
 <dl>
 <dt><strong><code>gain</code></strong> :&ensp;<code>int</code></dt>
 <dd>value of the gain:
-1 or 4</dd>
+1 or 4 (default: 1)</dd>
 </dl>
 <p>:Example:</p>
-<pre><code>    ADS1219.setGain(4)
+<pre><code>    ads.setGain(4)
 </code></pre></div>
 <details class="source">
 <summary>
@@ -1141,16 +1286,20 @@ Parameters</p>
         Parameters
         ----------
         gain : int
-                value of the gain:  1 or 4
+                value of the gain:  1 or 4 (default: 1)
 
         :Example:
 
-                ADS1219.setGain(4) 
+                ads.setGain(4)
 
         &#34;&#34;&#34;
         self.config &amp;= self.GAIN_MASK
-        if ( gain == 4) : self.config |= GAIN_4
-        elif( gain == 1) : self.config |= GAIN_1
+        if ( gain == 4) : 
+                self.config |= self.GAIN_4
+                self.gain =  4
+        elif( gain == 1) : 
+                self.config |= self.GAIN_1
+                self.gain =  1
         else : raise ValueError(&#34;&#39;gain&#39; can only be either 1 or 4&#34;)
         self.__sendConfig()</code></pre>
 </details>
@@ -1166,6 +1315,7 @@ Parameters</p>
 </summary>
 <pre><code class="python">def setInternalReference( self ):
         &#34;&#34;&#34;Configure the chip with the internal reference &#34;&#34;&#34;
+        self.Vref = 2.048
         self.config &amp;= self.VREF_MASK
         self.config |= self.VREF_INTERNAL
         self.__sendConfig()</code></pre>
@@ -1276,6 +1426,7 @@ Parameters</p>
 <li><code><a title="ADS1219_lib.core.ADS1219.VREF_EXTERNAL" href="#ADS1219_lib.core.ADS1219.VREF_EXTERNAL">VREF_EXTERNAL</a></code></li>
 <li><code><a title="ADS1219_lib.core.ADS1219.VREF_INTERNAL" href="#ADS1219_lib.core.ADS1219.VREF_INTERNAL">VREF_INTERNAL</a></code></li>
 <li><code><a title="ADS1219_lib.core.ADS1219.VREF_MASK" href="#ADS1219_lib.core.ADS1219.VREF_MASK">VREF_MASK</a></code></li>
+<li><code><a title="ADS1219_lib.core.ADS1219.convertToV" href="#ADS1219_lib.core.ADS1219.convertToV">convertToV</a></code></li>
 <li><code><a title="ADS1219_lib.core.ADS1219.isReady" href="#ADS1219_lib.core.ADS1219.isReady">isReady</a></code></li>
 <li><code><a title="ADS1219_lib.core.ADS1219.poweroff" href="#ADS1219_lib.core.ADS1219.poweroff">poweroff</a></code></li>
 <li><code><a title="ADS1219_lib.core.ADS1219.readConversionResult" href="#ADS1219_lib.core.ADS1219.readConversionResult">readConversionResult</a></code></li>
