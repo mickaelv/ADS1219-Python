@@ -10,7 +10,7 @@
 
 	Import the library with import ADS129
 
-	Create a new object with : ads =  ADS1219(1, 0x40, 4)
+	Create a new object with : ads = ADS1219(1, 0x40, 4)
 
 	Have fun !
 
@@ -52,7 +52,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 from smbus2 import SMBus, i2c_msg
 
-class ADS1219:
+class ads.
 
 	COMMAND_RESET 				= 0x06
 	COMMAND_START_SYNC 			= 0x08
@@ -150,11 +150,11 @@ class ADS1219:
 		Parameters
 		----------
 		gain : int
- 		 	value of the gain:  1 or 4
+ 		 	value of the gain:  1 or 4 (default: 1)
 
 		:Example:
 
-			ADS1219.setGain(4)
+			ads.setGain(4)
 
 		"""
 		self.config &= self.GAIN_MASK
@@ -170,14 +170,14 @@ class ADS1219:
 		Parameters
 		----------
 		datarate : int
- 		 	value of the datarate:  20, 90, 330 or 1000
+ 		 	value of the datarate:  20, 90, 330 or 1000 (default: 20)
 
 		size : int
 			size of data
 
 		:Example:
 
-			ADS1219.setDataRate(1000)
+			ads.setDataRate(1000)
 
 		"""
 
@@ -225,7 +225,7 @@ class ADS1219:
 
 		:Example:
 
-			ADS1219.readSingleEnded(0)
+			ads.readSingleEnded(0)
 
 		"""
 		self.config &= self.MUX_MASK
@@ -319,7 +319,7 @@ class ADS1219:
 			Input pin of the raspberry to know if data is available. 0 to desactivate and use software information
 		:Example:
 
-			ADS1219 = new ADS1219(1, 0x40, 4)
+			ads = ADS1219(1, 0x40, 4)
 
 		"""
 		self.i2c_adr = address
