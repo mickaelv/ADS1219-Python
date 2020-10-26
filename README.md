@@ -16,6 +16,7 @@ How To Install :
      git clone https://github.com/mickaelv/ADS1219-Python && cd ADS1219-Python && python3 setup.py install
 
 And Soon :
+     
      pip3 install ADS1219_lib 
 
 
