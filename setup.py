@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
- 
+
 from setuptools import setup, find_packages
- 
+
 import ADS1219_lib
- 
+
 
 setup(
- 
+
 	name='ADS1219_lib',
- 
+
 	# la version du code
 	version=ADS1219_lib.__version__,
 	packages=find_packages(),
@@ -29,6 +29,6 @@ setup(
 		"Programming Language :: Python",
 		"Topic :: System :: Hardware :: Hardware Drivers",
 	],
- 
-	 
+
+
 )

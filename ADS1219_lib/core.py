@@ -1,22 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
- 
+
 """
 	The ``core`` module
 	======================
- 
+
 	How to use ?
 	------------------------
- 
+
 	Import the library with import ADS129
-	
+
 	Create a new object with : ads =  ADS1219(1, 0x40, 4)
 
 	Have fun !
 
 	.. note:: Want more exemple ? See examples folder
- 
- 	Licence 
+
+ 	Licence
 	------------------------
 
 	MIT License
@@ -45,7 +45,7 @@
 	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 	OTHER DEALINGS IN THE SOFTWARE.
-			
+
 """
 
 import RPi.GPIO as GPIO
@@ -109,7 +109,7 @@ class ADS1219:
 		----------
 		reg : hex
  		 	register to write
-		
+
 		size : int
 			size of data
 
@@ -154,7 +154,7 @@ class ADS1219:
 
 		:Example:
 
-			ADS1219.setGain(4) 
+			ADS1219.setGain(4)
 
 		"""
 		self.config &= self.GAIN_MASK
@@ -162,7 +162,7 @@ class ADS1219:
 		elif( gain == 1) : self.config |= GAIN_1
 		else : raise ValueError("'gain' can only be either 1 or 4")
 		self.__sendConfig()
-		
+
 	def setDataRate( self, datarate ):
 		"""
 		Define the datarate
@@ -171,13 +171,13 @@ class ADS1219:
 		----------
 		datarate : int
  		 	value of the datarate:  20, 90, 330 or 1000
-		
+
 		size : int
 			size of data
 
 		:Example:
 
-			ADS1219.setDataRate(1000) 
+			ADS1219.setDataRate(1000)
 
 		"""
 
@@ -227,7 +227,7 @@ class ADS1219:
 
 			ADS1219.readSingleEnded(0)
 
-		"""	
+		"""
 		self.config &= self.MUX_MASK
 		if( channel == 0 ) : self.config |= self.MUX_SINGLE_0
 		elif( channel == 1 ) : self.config |= self.MUX_SINGLE_1
@@ -283,7 +283,7 @@ class ADS1219:
 		return self.readConversionResult()
 
 	def readDifferential_2_3( self ):
-		"""Read a value between 2 and 3 channel"""	
+		"""Read a value between 2 and 3 channel"""
 		self.config &= self.MUX_MASK
 		self.config |= self.MUX_DIF_2_3
 		self.__sendConfig()
@@ -298,7 +298,7 @@ class ADS1219:
 
 		.. note:: Please refer to 8.3.7 in the datasheet ( https://www.ti.com/lit/ds/sbas924a/sbas924a.pdf )
 
-		"""	
+		"""
 		self.config &= self.MUX_MASK
 		self.config |= self.MUX_SHORTED
 		self.__sendConfig()
@@ -308,12 +308,12 @@ class ADS1219:
 
 	def __init__( self, port=1, address=0x40, readyPin=0 ):
 		"""
-		Constructor 
+		Constructor
 		Parameters
 		----------
 		port : int
 			I2C port, for raspberry with port 2 and 3 please set to port=1
-		address : hex		
+		address : hex
 			I2C adress of the chip. Default is 0x40
 		readyPin: int
 			Input pin of the raspberry to know if data is available. 0 to desactivate and use software information
@@ -322,7 +322,7 @@ class ADS1219:
 			ADS1219 = new ADS1219(1, 0x40, 4)
 
 		"""
-		self.i2c_adr = address 
+		self.i2c_adr = address
 		self.bus = SMBus( port, True )
 		self.readyPin = readyPin
 		self.config = 0x00
@@ -333,7 +333,7 @@ class ADS1219:
 	def __enter__( self ):
 		"""Enter function"""
 		return self
-		
+
 	def __del__( self ):
 		"""Delete function"""
 		self.bus.close()

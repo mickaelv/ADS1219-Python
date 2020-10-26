@@ -1,40 +1,39 @@
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 	The ``ADS1219_lib`` package
 	======================
- 
-	Use it to use ADS1219 with à raspberry Pi. 
- 
- 
+
+	Use it to use ADS1219 with à raspberry Pi.
+
+
 	Wirering
 	-------------------
- 
-	SDA 	: Pin 3 (GPIO 2) 
+
+	SDA 	: Pin 3 (GPIO 2)
 
 	SCL 	: Pin 5 (GPIO 3)
 
 	Ready 	: Pin 7 (GPIO 4)
 
-	GND 	: Pin 39 
+	GND 	: Pin 39
 
 	3.3V	: Pin 1
 
 
 
 	.. warning:: Use the correct voltage to avoid problem with the chip.
- 
+
 	How to use ?
 	------------------------
- 
+
 	Import the library with import ADS129
 	Create a new object with : ADS1219 = new ADS1219(1, 0x40, 4)
 	Have fun !
 
 	.. note:: Want more exemple ? See examples folder
- 
- 	Licence 
+
+ 	Licence
 	------------------------
 
 	MIT License
@@ -63,7 +62,7 @@
 	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 	OTHER DEALINGS IN THE SOFTWARE.
-			
+
 """
 __version__ = "0.0.1"
 from .core import ADS1219
