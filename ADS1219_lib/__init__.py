@@ -27,8 +27,14 @@
 	How to use ?
 	------------------------
 
-	Import the library with import ADS129
-	Create a new object with : ADS1219 = new ADS1219(1, 0x40, 4)
+	Import the library with 
+
+		from ADS1219_lib import ADS1219
+	
+	Create a new object with : 
+
+		ads = new ADS1219(1, 0x40, 4)
+	
 	Have fun !
 
 	.. note:: Want more examples ? See Examples folder

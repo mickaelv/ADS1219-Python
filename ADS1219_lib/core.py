@@ -8,10 +8,14 @@
 	How to use ?
 	------------------------
 
-	Import the library with import ADS129
+	Import the library with 
 
-	Create a new object with : ads = ADS1219(1, 0x40, 4)
+		from ADS1219_lib import ADS1219
+	
+	Create a new object with : 
 
+		ads = new ADS1219(1, 0x40, 4)
+	
 	Have fun !
 
  	Licence
