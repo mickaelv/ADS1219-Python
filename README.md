@@ -13,9 +13,10 @@ Version : 0.0.1
 How To Install :
 
 
-     git clone https://github.com/mickaelv/ADS1219-Python && python3 setup.py install
+     git clone https://github.com/mickaelv/ADS1219-Python && cd ADS1219-Python && python3 setup.py install
 
-     SOON : pip3 install ADS1219_lib 
+And Soon :
+     pip3 install ADS1219_lib 
 
 
 This code is under MIT licence with the support of INREA ( Unité REVERSAAL at Villeurbanne )
