@@ -14,8 +14,6 @@
 
 	Have fun !
 
-	.. note:: Want more exemple ? See examples folder
-
  	Licence
 	------------------------
 
@@ -162,10 +160,10 @@ class ADS1219:
 		"""
 		self.config &= self.GAIN_MASK
 		if ( gain == 4) : 
-			self.config |= GAIN_4
+			self.config |= self.GAIN_4
 			self.gain =  4
 		elif( gain == 1) : 
-			self.config |= GAIN_1
+			self.config |= self.GAIN_1
 			self.gain =  1
 		else : raise ValueError("'gain' can only be either 1 or 4")
 		self.__sendConfig()
@@ -190,16 +188,16 @@ class ADS1219:
 
 		self.config &= self.DATA_RATE_MASK
 		if( datarate == 20 ) : 
-			self.config |= DATA_RATE_20
+			self.config |= self.DATA_RATE_20
 			self.datarate = 20
 		elif( datarate == 90 ) : 
-			self.config |= DATA_RATE_90
+			self.config |= self.DATA_RATE_90
 			self.datarate = 90
 		elif( datarate == 330 ) : 
-			self.config |= DATA_RATE_330
+			self.config |= self.DATA_RATE_330
 			self.datarate = 330
 		elif( datarate == 1000 ) : 
-			self.config |= DATA_RATE_1000
+			self.config |= self.DATA_RATE_1000
 			self.datarate = 1000
 		else : raise ValueError("'datarate' can only be either 20, 90, 330 or 1000")
 		self.__sendConfig()

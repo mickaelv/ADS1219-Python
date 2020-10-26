@@ -31,7 +31,8 @@
 	Create a new object with : ADS1219 = new ADS1219(1, 0x40, 4)
 	Have fun !
 
-	.. note:: Want more exemple ? See examples folder
+	.. note:: Want more examples ? See Examples folder
+
 
  	Licence
 	------------------------
