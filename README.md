@@ -1,11 +1,11 @@
 # ADS1219_lib
 
 ADS1219_lib is a Python library to use a ADS1219 with a Raspberry Pi. 
-Develop with the funding of the [INREA](https://www.inrae.fr/) ( Unité REVERSAAL at Villeurbanne )
+Development funded by [INRAE](https://www.inrae.fr/) (REVERSAAL research unit, Villeurbanne, France)
 
 ## Installation
 
-You can use this command to install ADS1219_lib easly :
+You can use this command to install ADS1219_lib easily :
 
 ```bash
 git clone https://github.com/mickaelv/ADS1219-Python && cd ADS1219-Python && python3 setup.py install
