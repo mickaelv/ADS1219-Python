@@ -46,8 +46,8 @@
 	MIT License
 	-----------
 
-	Copyright (c) 2020 Mickaël Veleine ( https://mickaelv.fr ) with
-	the support of INREA ( Unité REVERSAAL at Villeurbanne )
+	Copyright (c) 2020 Mickaël Veleine ( https://mickaelv.fr )
+	Development funded by INRAE (REVERSAAL research unit, Villeurbanne, France)
 
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
@@ -71,5 +71,5 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 
 """
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 from .core import ADS1219

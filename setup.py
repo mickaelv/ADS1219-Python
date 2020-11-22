@@ -16,6 +16,7 @@ setup(
 	author="Mickaël Veleine",
 	author_email="contact@mickaelv.fr",
 	description="Lib to use ADS1219 with Python on Raspberry",
+	long_description_content_type='text/markdown'
 	long_description=open('README.md').read(),
 	install_requires= ["RPi.GPIO", "smbus2"],
 	include_package_data=True,
