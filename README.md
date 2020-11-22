@@ -13,7 +13,7 @@ You can use this command to install ADS1219_lib easily :
 git clone https://github.com/mickaelv/ADS1219-Python && cd ADS1219-Python && python3 setup.py install
 ```
 
-Soon on pip Use the package manager [pip](https://pip.pypa.io/en/stable/) to install ADS1219_lib :
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install ADS1219_lib :
 ```bash
 pip install ADS1219_lib 
 ```
